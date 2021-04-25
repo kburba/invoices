@@ -1,21 +1,35 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
+import { useForm } from 'react-hook-form';
+import { NewInvoice } from './invoice.types';
+import { getProducts as getProductsAction } from '../../store/actions/product.actions';
 
 export default function NewInvoiceForm() {
+  const { register, handleSubmit } = useForm<NewInvoice>();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getProductsAction());
+  }, [dispatch]);
+
   const products = useSelector<RootState>(
     ({ productReducer }) => productReducer.products
   );
   console.log('products', products);
+
+  const onSubmit = handleSubmit((data) => console.log(data));
+
   return (
-    <div>
+    <form onSubmit={onSubmit}>
       <div>
         <label htmlFor="title">Title:</label>
-        <input name="title" placeholder="Enter title..."></input>
+        <input placeholder="Enter title..." {...register('title')} />
       </div>
       <div>
         <label htmlFor="description">Description:</label>
         <textarea
+          {...register('description')}
           rows={4}
           name="description"
           placeholder="Describe invoice..."
@@ -39,6 +53,6 @@ export default function NewInvoiceForm() {
         </div>
       </div>
       <div>timestamp</div>
-    </div>
+    </form>
   );
 }

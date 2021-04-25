@@ -1,5 +1,6 @@
 import {
   GetProducts,
+  GetProductsError,
   GetProductsSuccess,
   Product,
   ProductActions,
@@ -15,5 +16,12 @@ export function getProductsSuccess(products: Product[]): GetProductsSuccess {
   return {
     type: ProductActions.GET_PRODUCTS_SUCCESS,
     payload: products,
+  };
+}
+
+export function getProductsError(error: string): GetProductsError {
+  return {
+    type: ProductActions.GET_PRODUCTS_ERROR,
+    error,
   };
 }

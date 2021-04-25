@@ -5,6 +5,7 @@ export interface ProductState {
 export enum ProductActions {
   GET_PRODUCTS = 'GET_PRODUCTS',
   GET_PRODUCTS_SUCCESS = 'GET_PRODUCTS_SUCCESS',
+  GET_PRODUCTS_ERROR = 'GET_PRODUCTS_ERROR',
 }
 
 export type Product = {
@@ -19,6 +20,11 @@ export interface GetProducts {
 export interface GetProductsSuccess {
   type: typeof ProductActions.GET_PRODUCTS_SUCCESS;
   payload: Product[];
+}
+
+export interface GetProductsError {
+  type: typeof ProductActions.GET_PRODUCTS_ERROR;
+  error: string;
 }
 
 export type ProductActionTypes = GetProducts | GetProductsSuccess;

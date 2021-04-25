@@ -7,7 +7,8 @@ export enum InvoiceActions {
   GET_INVOICES_SUCCESS = 'GET_INVOICES_SUCCESS',
 }
 
-export type Invoice = {
+export type NewInvoice = Omit<Invoice, 'id'>;
+export interface Invoice {
   id: string;
   title: string;
   description: string;
@@ -17,7 +18,7 @@ export type Invoice = {
     quantity: number;
   };
   timestamp: number;
-};
+}
 
 export interface GetInvoices {
   type: typeof InvoiceActions.GET_INVOICES;
