@@ -1,13 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import NewInvoiceForm from './containers/Invoices/NewInvoiceForm';
 
 function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/new">
-          <div>New</div>
-        </Route>
+        <Route path="/new" component={NewInvoiceForm} />
         <Route path="/edit">
           <div>Edit</div>
         </Route>

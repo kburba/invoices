@@ -1,6 +1,12 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducers';
 
-export default function NewInvoice() {
+export default function NewInvoiceForm() {
+  const products = useSelector<RootState>(
+    ({ productReducer }) => productReducer.products
+  );
+  console.log('products', products);
   return (
     <div>
       <div>

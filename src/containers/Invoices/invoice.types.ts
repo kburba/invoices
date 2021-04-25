@@ -1,3 +1,7 @@
+export interface InvoicesState {
+  invoices: Invoice[];
+}
+
 export enum InvoiceActions {
   GET_INVOICES = 'GET_INVOICES',
   GET_INVOICES_SUCCESS = 'GET_INVOICES_SUCCESS',

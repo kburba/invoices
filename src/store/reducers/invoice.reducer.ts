@@ -1,12 +1,17 @@
-const initialState = {
+import {
+  InvoiceActionTypes,
+  InvoicesState,
+} from '../../containers/Invoices/invoice.types';
+
+const initialState: InvoicesState = {
   invoices: [],
 };
 
-const invoiceReducer = (state = initialState, action: any) => {
+const productReducer = (state = initialState, action: InvoiceActionTypes) => {
   switch (action.type) {
     default:
       return state;
   }
 };
 
-export default invoiceReducer;
+export default productReducer;

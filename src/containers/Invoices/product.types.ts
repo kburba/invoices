@@ -1,3 +1,7 @@
+export interface ProductState {
+  products: Product[];
+}
+
 export enum ProductActions {
   GET_PRODUCTS = 'GET_PRODUCTS',
   GET_PRODUCTS_SUCCESS = 'GET_PRODUCTS_SUCCESS',
