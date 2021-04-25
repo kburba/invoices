@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import invoiceReducer from './invoiceReducer';
+import invoiceReducer from './invoice.reducer';
 
 const RootReducer = combineReducers({
   invoices: invoiceReducer,
