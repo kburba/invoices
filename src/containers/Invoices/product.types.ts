@@ -27,4 +27,7 @@ export interface GetProductsError {
   error: string;
 }
 
-export type ProductActionTypes = GetProducts | GetProductsSuccess;
+export type ProductActionTypes =
+  | GetProducts
+  | GetProductsSuccess
+  | GetProductsError;

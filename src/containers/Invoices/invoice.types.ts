@@ -3,6 +3,9 @@ export interface InvoicesState {
 }
 
 export enum InvoiceActions {
+  SAVE_INVOICE = 'SAVE_INVOICE',
+  SAVE_INVOICE_SUCCESS = 'SAVE_INVOICE_SUCCESS',
+  SAVE_INVOICE_ERROR = 'SAVE_INVOICE_ERROR',
   GET_INVOICES = 'GET_INVOICES',
   GET_INVOICES_SUCCESS = 'GET_INVOICES_SUCCESS',
 }
@@ -16,8 +19,21 @@ export interface Invoice {
     product: string;
     price: number;
     quantity: number;
-  };
+  }[];
   timestamp: number;
+}
+
+export interface SaveInvoice {
+  type: typeof InvoiceActions.SAVE_INVOICE;
+  payload: NewInvoice;
+}
+export interface SaveInvoiceSuccess {
+  type: typeof InvoiceActions.SAVE_INVOICE_SUCCESS;
+  payload: Invoice;
+}
+export interface SaveInvoiceError {
+  type: typeof InvoiceActions.SAVE_INVOICE_ERROR;
+  error: string;
 }
 
 export interface GetInvoices {
@@ -28,4 +44,9 @@ export interface GetInvoicesSuccess {
   payload: Invoice[];
 }
 
-export type InvoiceActionTypes = GetInvoices | GetInvoicesSuccess;
+export type InvoiceActionTypes =
+  | GetInvoices
+  | GetInvoicesSuccess
+  | SaveInvoice
+  | SaveInvoiceSuccess
+  | SaveInvoiceError;

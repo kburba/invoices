@@ -7,9 +7,7 @@ function App() {
     <Router>
       <Switch>
         <Route path="/new" component={NewInvoiceForm} />
-        <Route path="/edit">
-          <div>Edit</div>
-        </Route>
+        <Route path="/edit/:invoiceId" component={NewInvoiceForm} />
         <Route path="/">
           <h1>Invoices</h1>
           <Link to="/new">Create Invoice</Link>
