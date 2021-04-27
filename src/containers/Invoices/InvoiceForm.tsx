@@ -188,7 +188,7 @@ export default function InvoiceForm({
           onChange={(date) => date && setValue('timestamp', date.valueOf())}
           value={moment(timestamp)}
         />
-        <button type="button" onClick={() => history.push('/')}>
+        <button type="button" onClick={() => history.push('/invoices')}>
           Cancel
         </button>
         <input type="submit" />

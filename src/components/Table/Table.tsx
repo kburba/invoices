@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { TableAction, TableColumn } from './table.types';
 import { formatCellValue } from './utils';
 
@@ -27,7 +28,18 @@ export default function Table({ actions, columns, data }: TableProps) {
                   item[column.valueKey],
                   column.valueType
                 );
-                return <td key={`${colIdx}-${column.title}`}>{cellValue}</td>;
+                const valueAsLink = column.onClick ? (
+                  <Link
+                    to={`${column.onClick.linkPrefix}${
+                      item[column.onClick.linkKey]
+                    }`}
+                  >
+                    {cellValue}
+                  </Link>
+                ) : (
+                  cellValue
+                );
+                return <td key={`${colIdx}-${column.title}`}>{valueAsLink}</td>;
               })}
             </tr>
           );

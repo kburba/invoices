@@ -28,10 +28,14 @@ export default function Invoices() {
           {
             title: 'Name',
             valueKey: 'title',
+            onClick: {
+              linkKey: 'id',
+              linkPrefix: '/invoices/edit/',
+              type: 'link',
+            },
           },
         ]}
       />
-      {invoices.length}
     </div>
   );
 }
