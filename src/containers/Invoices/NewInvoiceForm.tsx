@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -10,16 +10,17 @@ import Dropdown from '../../components/Dropdown';
 import { Product } from './product.types';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
-import { SingleDatePicker } from 'react-dates';
 import moment from 'moment';
 import { RouteComponentProps } from 'react-router';
 import { saveInvoice } from '../../store/actions/invoice.actions';
+import DatePicker from '../../components/DatePicker';
 
 type MatchParams = {
   invoiceId?: string;
 };
 
 export default function NewInvoiceForm({
+  history,
   match: {
     params: { invoiceId },
   },
@@ -39,8 +40,6 @@ export default function NewInvoiceForm({
     reValidateMode: 'onBlur',
     mode: 'all',
   });
-
-  const [dateFocused, setDateFocused] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -155,19 +154,13 @@ export default function NewInvoiceForm({
             <div>Please add at least one product</div>
           )}
         </div>
-        <div>
-          <SingleDatePicker
-            date={moment(watch('timestamp'))}
-            onDateChange={(date) =>
-              date && setValue('timestamp', date.valueOf())
-            }
-            isOutsideRange={() => false}
-            focused={dateFocused}
-            numberOfMonths={1}
-            onFocusChange={({ focused }) => setDateFocused(focused)}
-            id="invoiceTimestamp"
-          />
-        </div>
+        <DatePicker
+          onChange={(date) => date && setValue('timestamp', date.valueOf())}
+          value={moment(watch('timestamp'))}
+        />
+        <button type="button" onClick={() => history.push('/')}>
+          Cancel
+        </button>
         <input type="submit" />
       </form>
     </>
