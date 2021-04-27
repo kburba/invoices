@@ -4,7 +4,7 @@ import {
   GetProductsSuccess,
   Product,
   ProductActions,
-} from '../../containers/Invoices/product.types';
+} from '../../containers/products/product.types';
 
 export function getProducts(): GetProducts {
   return {

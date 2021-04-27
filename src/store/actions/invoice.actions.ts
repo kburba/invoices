@@ -7,12 +7,15 @@ import {
   SaveInvoice,
   SaveInvoiceError,
   SaveInvoiceSuccess,
-} from '../../containers/Invoices/invoice.types';
+} from '../../containers/invoices/invoice.types';
 
-export function saveInvoice(newInvoice: NewInvoice): SaveInvoice {
+export function saveInvoice(
+  invoice: NewInvoice,
+  callbackFn?: () => void
+): SaveInvoice {
   return {
     type: InvoiceActions.SAVE_INVOICE,
-    payload: newInvoice,
+    payload: { invoice, callbackFn },
   };
 }
 

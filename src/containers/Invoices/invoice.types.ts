@@ -25,7 +25,7 @@ export interface Invoice {
 
 export interface SaveInvoice {
   type: typeof InvoiceActions.SAVE_INVOICE;
-  payload: NewInvoice;
+  payload: { invoice: NewInvoice; callbackFn?: () => void };
 }
 export interface SaveInvoiceSuccess {
   type: typeof InvoiceActions.SAVE_INVOICE_SUCCESS;

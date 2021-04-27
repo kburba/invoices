@@ -1,26 +1,24 @@
-import { takeLatest, put } from 'redux-saga/effects';
+import { takeLatest, put, select } from 'redux-saga/effects';
+import { ProductActions } from '../../containers/products/product.types';
 import {
-  InvoiceActions,
-  SaveInvoice,
-} from '../../containers/Invoices/invoice.types';
-import {
-  saveInvoiceError,
-  saveInvoiceSuccess,
-} from '../actions/invoice.actions';
-import { v4 as uuidv4 } from 'uuid';
+  getProductsError,
+  getProductsSuccess,
+} from '../actions/product.actions';
+import PRODUCTS from '../data/products';
+import { getIsloadedProductsFromStore } from './selectors';
 
-function* saveInvoiceSaga({ payload }: SaveInvoice) {
+function* getProductsSaga() {
   try {
-    const savedInvoice = {
-      ...payload,
-      id: uuidv4(),
-    };
-    yield put(saveInvoiceSuccess(savedInvoice));
+    console.log('saga');
+    const isLoaded: boolean = yield select(getIsloadedProductsFromStore);
+    if (!isLoaded) {
+      yield put(getProductsSuccess(PRODUCTS));
+    }
   } catch (e) {
-    yield put(saveInvoiceError(e));
+    yield put(getProductsError(e));
   }
 }
 
 export default function* watchProductsSaga() {
-  yield takeLatest(InvoiceActions.SAVE_INVOICE, saveInvoiceSaga);
+  yield takeLatest(ProductActions.GET_PRODUCTS, getProductsSaga);
 }

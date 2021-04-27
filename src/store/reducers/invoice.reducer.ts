@@ -2,7 +2,7 @@ import {
   InvoiceActions,
   InvoiceActionTypes,
   InvoicesState,
-} from '../../containers/Invoices/invoice.types';
+} from '../../containers/invoices/invoice.types';
 
 const initialState: InvoicesState = {
   invoices: [],

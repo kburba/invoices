@@ -1,4 +1,4 @@
-import { Product } from '../../containers/Invoices/product.types';
+import { Product } from '../../containers/products/product.types';
 
 export default [
   {

@@ -2,10 +2,11 @@ import {
   ProductActions,
   ProductActionTypes,
   ProductState,
-} from '../../containers/Invoices/product.types';
+} from '../../containers/products/product.types';
 
 const initialState: ProductState = {
   products: [],
+  isLoadedProducts: false,
 };
 
 const productReducer = (state = initialState, action: ProductActionTypes) => {
@@ -14,6 +15,7 @@ const productReducer = (state = initialState, action: ProductActionTypes) => {
       return {
         ...state,
         products: action.payload,
+        isLoadedProducts: true,
       };
     default:
       return state;

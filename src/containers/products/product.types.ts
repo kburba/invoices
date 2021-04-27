@@ -1,5 +1,6 @@
 export interface ProductState {
   products: Product[];
+  isLoadedProducts: boolean;
 }
 
 export enum ProductActions {
