@@ -24,6 +24,7 @@ import {
 } from '../../utils/utils';
 import { uiReducerState } from '../../store/types/ui.types';
 import { resetErrors } from '../../store/actions/ui.actions';
+import classnames from 'classnames';
 
 type MatchParams = {
   invoiceId?: string;
@@ -61,9 +62,12 @@ export default function InvoiceForm({
     ? { ...selectedInvoice }
     : {
         timestamp: new Date().getTime(),
-        lines: [],
+        lines: [
+          {
+            product: '',
+          },
+        ],
       };
-  console.log('selectedInvoice', selectedInvoice?.lines, defaultValues.lines);
 
   const {
     control,
@@ -91,10 +95,12 @@ export default function InvoiceForm({
     'name',
     'name'
   );
-  const totalSum = lines.reduce(
-    (acc, curr) => acc + curr.price * curr.quantity,
-    0
-  );
+  const totalSum = lines.reduce((acc, curr) => {
+    if (!isNaN(curr.price) && !isNaN(curr.quantity)) {
+      return acc + curr.price * curr.quantity;
+    }
+    return acc;
+  }, 0);
   const totalFormatted = formatCurrency(totalSum);
 
   const onSubmit = handleSubmit((data) => {
@@ -124,26 +130,49 @@ export default function InvoiceForm({
     <div className="container">
       <form onSubmit={onSubmit} noValidate>
         <h1>{invoiceId ? 'Edit Invoice' : 'New invoice'}</h1>
-        <div className="inputGroup">
-          <label htmlFor="title">Title</label>
-          <input placeholder="Enter title..." {...register('title')} />
-          {errors.title && (
-            <div className="errorMsg">{errors.title.message}</div>
-          )}
-        </div>
-        <div>
-          <label htmlFor="description">Description:</label>
-          <textarea
-            {...register('description')}
-            rows={4}
-            name="description"
-            placeholder="Describe invoice..."
-          />
-          {errors.description && (
-            <div className="errorMsg">{errors.description.message}</div>
-          )}
+        <div className="inline">
+          <div className="inputGroup inline inline--column">
+            <div className={classnames('inputGroup', { error: errors.title })}>
+              <label htmlFor="title">Title</label>
+              <input
+                type="text"
+                placeholder="Enter title..."
+                {...register('title')}
+              />
+              {errors.title && (
+                <div className="errorMsg">{errors.title.message}</div>
+              )}
+            </div>
+            <div className="inputGroup">
+              <label htmlFor="date">Date</label>
+              <DatePicker
+                onChange={(date) =>
+                  date && setValue('timestamp', date.valueOf())
+                }
+                value={moment(timestamp)}
+              />
+            </div>
+          </div>
+
+          <div
+            className={classnames('inputGroup', { error: errors.description })}
+          >
+            <label htmlFor="description">Description</label>
+            <textarea
+              {...register('description')}
+              rows={6}
+              name="description"
+              placeholder="Describe invoice..."
+            />
+          </div>
         </div>
         <div className="lines">
+          <div className="line names">
+            <div>Product</div>
+            <div>Quantity</div>
+            <div>Price</div>
+            <div>Total</div>
+          </div>
           {fields.map((field, idx) => {
             const product = `lines.${idx}.product` as `lines.0.product`;
             const price = `lines.${idx}.price` as `lines.0.price`;
@@ -153,7 +182,7 @@ export default function InvoiceForm({
               watch(price) &&
               watch(quantity) &&
               !isNaN(watch(price) * watch(quantity))
-                ? (watch(price) * watch(quantity)).toFixed(2)
+                ? formatCurrency(watch(price) * watch(quantity))
                 : 0;
 
             const fieldPrice = watch(price) ? formatCurrency(watch(price)) : '';
@@ -163,71 +192,93 @@ export default function InvoiceForm({
             const isWeighted = selectedProduct && selectedProduct.isWeighted;
             return (
               <div className="line" key={field.id}>
-                <Dropdown
-                  data={productOptions}
-                  {...register(product)}
-                  name="product"
-                  value={watch(product)}
-                  onChange={(value) => {
-                    const selected = products.byName[value];
-                    setValue(product, value);
-                    if (selected) {
-                      setValue(price, selected.price);
-                    }
-                  }}
-                  error={
-                    errors.lines && Array.isArray(errors.lines)
-                      ? errors.lines[idx]?.product?.message
-                      : undefined
-                  }
-                />
-                <input
-                  placeholder={`Enter quantity${
-                    isWeighted ? ' (0,0000)' : ''
-                  }...`}
-                  type="number"
-                  // value={watch(quantity)}
-                  {...register(quantity)}
-                  onBlur={(e) => {
-                    const newValue = formatNumber(
-                      e.target.value,
-                      isWeighted ? 4 : 0
-                    );
-                    if (!isNaN(newValue)) {
-                      setValue(quantity, newValue);
-                    }
-                  }}
-                />
-                <input disabled value={fieldPrice} {...register} />
-                <input disabled value={fieldTotals} />
-                <button onClick={() => remove(idx)}>X</button>
+                <div>
+                  <Dropdown
+                    data={productOptions}
+                    {...register(product)}
+                    name="product"
+                    value={watch(product)}
+                    onChange={(value) => {
+                      const selected = products.byName[value];
+                      setValue(product, value);
+                      if (selected) {
+                        setValue(price, selected.price);
+                      }
+                    }}
+                  />
+                </div>
+                <div>
+                  <input
+                    placeholder={`Enter quantity${
+                      isWeighted ? ' (0,0000)' : ''
+                    }...`}
+                    type="number"
+                    className={classnames({
+                      error:
+                        errors.lines &&
+                        Array.isArray(errors.lines) &&
+                        errors.lines[idx]?.quantity,
+                    })}
+                    {...register(quantity)}
+                    onBlur={(e) => {
+                      const newValue = formatNumber(
+                        e.target.value,
+                        isWeighted ? 4 : 0
+                      );
+                      if (!isNaN(newValue)) {
+                        setValue(quantity, newValue);
+                      }
+                    }}
+                  />
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    disabled
+                    placeholder="Price"
+                    value={fieldPrice}
+                  />
+                </div>
+                <div>
+                  <input type="text" disabled value={fieldTotals} />
+                </div>
+                {idx > 0 && <button onClick={() => remove(idx)}>X</button>}
               </div>
             );
           })}
 
           <button
             type="button"
+            className="basic"
             onClick={() =>
               append({
                 product: '',
               })
             }
           >
-            add product
+            + add product
           </button>
-          {lines.length > 0 && <div>Total: {totalFormatted}</div>}
           {errors.lines && !Array.isArray(errors.lines) && (
             <div>Please add at least one product</div>
           )}
         </div>
-        <DatePicker
-          onChange={(date) => date && setValue('timestamp', date.valueOf())}
-          value={moment(timestamp)}
-        />
-        <button type="button" onClick={() => history.push('/invoices')}>
-          Cancel
-        </button>
-        <input type="submit" />
+        {lines.length > 0 && (
+          <div className="text-right">
+            <h3>Total: {totalFormatted}</h3>
+          </div>
+        )}
+        <div className="text-right">
+          <button
+            className="basic"
+            type="button"
+            onClick={() => history.push('/invoices')}
+          >
+            Cancel
+          </button>
+          <button className="primary" type="submit">
+            Save
+          </button>
+        </div>
         {serverErrors.saveInvoice && <div>{serverErrors.saveInvoice}</div>}
       </form>
     </div>

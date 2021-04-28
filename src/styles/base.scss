@@ -13,7 +13,9 @@ span,
 table,
 input,
 label,
-input::-webkit-input-placeholder {
+textarea,
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
   font-family: 'Roboto', sans-serif;
 }
 
@@ -27,6 +29,28 @@ body {
   background-color: rgba(0, 0, 0, 0.05);
 }
 
+input[type='text'],
+input[type='number'],
+textarea,
+select {
+  padding: 12px 15px;
+  border: 1px solid lightgrey;
+  border-radius: 8px;
+  font-size: 16px;
+  line-height: 1;
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 6px rgb(125, 223, 255);
+    border: 1px solid white;
+  }
+}
+
+label {
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: grey;
+}
+
 .container {
   max-width: 700px;
   margin: 0 auto;
@@ -38,6 +62,165 @@ body {
   color: red;
   font-size: 12px;
   background: rgba(255, 0, 0, 0.1);
-  padding: 5px;
-  margin: 5px 0 15px 0;
+  padding: 3px 6px;
+  margin: 0;
+  text-align: center;
+}
+
+select.error,
+input.error,
+input.error::-webkit-input-placeholder {
+  color: red;
+}
+
+.inline {
+  display: flex;
+
+  &.inline--column {
+    flex-direction: column;
+    &.inputGroup > .inputGroup {
+      margin-right: 0;
+    }
+  }
+
+  .inputGroup {
+    flex-grow: 1;
+    margin-right: 15px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-bottom: 15px;
+
+  .errorMsg {
+    background: none;
+  }
+
+  &.error {
+    input {
+      border-color: rgba(255, 0, 0, 0.5);
+      &:focus {
+        box-shadow: 0 0 6px rgba(255, 0, 0, 0.1);
+      }
+    }
+  }
+}
+
+.lines {
+  padding: 8px;
+  border: 1px solid lightgrey;
+  border-radius: 8px;
+
+  .line {
+    display: flex;
+    margin-bottom: 8px;
+    border-bottom: 1px solid lightgrey;
+
+    button {
+      border: 0;
+      padding: 6px;
+      background: 0;
+      margin: 0;
+      color: lightgray;
+      cursor: pointer;
+      &:hover {
+        color: grey;
+      }
+    }
+
+    &:last-of-type {
+      border-bottom: 0;
+    }
+
+    input,
+    select {
+      font-size: 14px;
+      border: 0;
+      background: 0;
+      padding: 3px 5px;
+      border-bottom: 1px solid transparent;
+      border-radius: 0;
+      &:focus {
+        box-shadow: none;
+        outline: none;
+        border-bottom-color: rgb(125, 223, 255);
+      }
+    }
+
+    & > div {
+      width: 50%;
+      margin-right: 15px;
+      overflow: hidden;
+      &:first-of-type {
+        width: 100%;
+      }
+    }
+    &:nth-child(2) {
+      & > div {
+        &:last-child {
+          margin-right: 36px;
+        }
+      }
+    }
+    &.names {
+      font-size: 14px;
+      color: grey;
+      margin-bottom: 8px;
+      padding-bottom: 3px;
+      border-bottom: 2px solid lightgrey;
+      & > div {
+        &:last-child {
+          margin-right: 39px;
+        }
+      }
+    }
+  }
+}
+
+.text-right {
+  text-align: right;
+}
+
+.SingleDatePicker {
+  width: 100%;
+  .SingleDatePickerInput {
+    border: 0;
+    width: 100%;
+  }
+
+  .DateInput {
+    width: 100%;
+
+    & > input {
+      box-sizing: border-box;
+    }
+  }
+}
+
+button {
+  border-radius: 8px;
+  padding: 8px 15px;
+  border: 1px solid lightgrey;
+  cursor: pointer;
+  margin-right: 5px;
+
+  &.primary {
+    background-color: #c5f1ff;
+    padding: 8px 25px;
+    color: grey;
+  }
+  &.basic {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: grey;
+    &:hover {
+      color: rgba(0, 0, 0, 0.9);
+    }
+  }
 }

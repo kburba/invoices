@@ -18,7 +18,7 @@ function* updateInvoiceSaga({
     // randomly throw error
     const throwErr = Math.floor(Math.random() * 10) % 2 > 0;
     if (throwErr) {
-      throw new Error('Error updating invoice');
+      throw new Error('Error updating invoice. Please try again');
     }
     yield put(updateInvoiceSuccess(invoice));
     if (callbackFn) {
@@ -39,7 +39,7 @@ function* saveInvoiceSaga({ payload: { invoice, callbackFn } }: SaveInvoice) {
     // randomly throw error
     const throwErr = Math.floor(Math.random() * 10) % 2 > 0;
     if (throwErr) {
-      throw new Error('Error saving invoice');
+      throw new Error('Error saving invoice. Please try again');
     }
     yield put(saveInvoiceSuccess(savedInvoice));
     if (callbackFn) {
