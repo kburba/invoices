@@ -10,7 +10,6 @@ import { getIsloadedProductsFromStore } from './selectors';
 
 function* getProductsSaga() {
   try {
-    console.log('saga');
     const isLoaded: boolean = yield select(getIsloadedProductsFromStore);
     if (!isLoaded) {
       const normalizedProducts = formatNormalizedProducts(PRODUCTS);

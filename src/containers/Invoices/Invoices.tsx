@@ -40,7 +40,7 @@ export default function Invoices() {
     dispatch(setDateRange(dateRange));
 
   return (
-    <div>
+    <div className="container">
       <h1>Invoices</h1>
       <div>
         <Link to="/invoices/new">Create New Invoice</Link>

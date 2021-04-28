@@ -7,7 +7,26 @@ import {
   SaveInvoice,
   SaveInvoiceError,
   SaveInvoiceSuccess,
+  UpdateInvoice,
+  UpdateInvoiceSuccess,
 } from '../../containers/invoices/invoice.types';
+
+export function updateInvoice(
+  invoice: Invoice,
+  callbackFn?: () => void
+): UpdateInvoice {
+  return {
+    type: InvoiceActions.UPDATE_INVOICE,
+    payload: { invoice, callbackFn },
+  };
+}
+
+export function updateInvoiceSuccess(invoice: Invoice): UpdateInvoiceSuccess {
+  return {
+    type: InvoiceActions.UPDATE_INVOICE_SUCCESS,
+    payload: invoice,
+  };
+}
 
 export function saveInvoice(
   invoice: NewInvoice,

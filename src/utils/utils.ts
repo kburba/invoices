@@ -66,3 +66,7 @@ export function formatCurrency(value: number) {
     currency: 'EUR',
   }).format(value);
 }
+
+export function formatNumber(value: string, decimals: 0 | 4) {
+  return parseFloat(parseFloat(value.replace(/,/g, '.')).toFixed(decimals));
+}

@@ -5,6 +5,8 @@ export interface InvoicesState {
 export enum InvoiceActions {
   SAVE_INVOICE = 'SAVE_INVOICE',
   SAVE_INVOICE_SUCCESS = 'SAVE_INVOICE_SUCCESS',
+  UPDATE_INVOICE = 'UPDATE_INVOICE',
+  UPDATE_INVOICE_SUCCESS = 'UPDATE_INVOICE_SUCCESS',
   SAVE_INVOICE_ERROR = 'SAVE_INVOICE_ERROR',
   GET_INVOICES = 'GET_INVOICES',
   GET_INVOICES_SUCCESS = 'GET_INVOICES_SUCCESS',
@@ -25,6 +27,15 @@ export interface Invoice {
     quantity: number;
   }[];
   timestamp: number;
+}
+
+export interface UpdateInvoice {
+  type: typeof InvoiceActions.UPDATE_INVOICE;
+  payload: { invoice: Invoice; callbackFn?: () => void };
+}
+export interface UpdateInvoiceSuccess {
+  type: typeof InvoiceActions.UPDATE_INVOICE_SUCCESS;
+  payload: Invoice;
 }
 
 export interface SaveInvoice {
@@ -53,4 +64,6 @@ export type InvoiceActionTypes =
   | GetInvoicesSuccess
   | SaveInvoice
   | SaveInvoiceSuccess
-  | SaveInvoiceError;
+  | SaveInvoiceError
+  | UpdateInvoice
+  | UpdateInvoiceSuccess;
