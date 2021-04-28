@@ -15,6 +15,7 @@ import { RouteComponentProps } from 'react-router';
 import { saveInvoice } from '../../store/actions/invoice.actions';
 import DatePicker from '../../components/DatePicker';
 import { formatCurrency, formatDropdownOptions } from '../../utils/utils';
+import { uiReducerState } from '../../store/types/ui.types';
 
 type MatchParams = {
   invoiceId?: string;
@@ -26,12 +27,17 @@ export default function InvoiceForm({
     params: { invoiceId },
   },
 }: RouteComponentProps<MatchParams>) {
-  const { products, invoices } = useSelector<
+  const { products, invoices, serverErrors } = useSelector<
     RootState,
-    { products: NormalizedProducts; invoices: NormalizedInvoices }
-  >(({ productReducer, invoiceReducer }) => ({
+    {
+      products: NormalizedProducts;
+      invoices: NormalizedInvoices;
+      serverErrors: uiReducerState['errors'];
+    }
+  >(({ productReducer, invoiceReducer, uiReducer }) => ({
     products: productReducer.products,
     invoices: invoiceReducer.invoices,
+    serverErrors: uiReducer.errors,
   }));
 
   const selectedInvoice = invoiceId ? invoices.byId[invoiceId] : null;
@@ -215,6 +221,7 @@ export default function InvoiceForm({
         <button type="button" onClick={() => history.push('/invoices')}>
           Cancel
         </button>
+        {serverErrors.saveInvoice && <div>{serverErrors.saveInvoice}</div>}
         <input type="submit" />
       </form>
     </>

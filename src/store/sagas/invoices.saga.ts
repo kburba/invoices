@@ -3,11 +3,9 @@ import {
   InvoiceActions,
   SaveInvoice,
 } from '../../containers/invoices/invoice.types';
-import {
-  saveInvoiceError,
-  saveInvoiceSuccess,
-} from '../actions/invoice.actions';
+import { saveInvoiceSuccess } from '../actions/invoice.actions';
 import { v4 as uuidv4 } from 'uuid';
+import { setError } from '../actions/ui.actions';
 
 function* saveInvoiceSaga({ payload: { invoice, callbackFn } }: SaveInvoice) {
   try {
@@ -15,12 +13,17 @@ function* saveInvoiceSaga({ payload: { invoice, callbackFn } }: SaveInvoice) {
       ...invoice,
       id: uuidv4(),
     };
+    // randomly throw error
+    const throwErr = Math.floor(Math.random() * 10) % 2 > 0;
+    if (throwErr) {
+      throw new Error('Error saving invoice');
+    }
     yield put(saveInvoiceSuccess(savedInvoice));
     if (callbackFn) {
       callbackFn();
     }
   } catch (e) {
-    yield put(saveInvoiceError(e));
+    yield put(setError({ key: 'saveInvoice', message: e.message }));
   }
 }
 

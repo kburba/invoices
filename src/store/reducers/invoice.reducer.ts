@@ -11,7 +11,7 @@ const initialState: InvoicesState = {
   },
 };
 
-const productReducer = (state = initialState, action: InvoiceActionTypes) => {
+const invoiceReducer = (state = initialState, action: InvoiceActionTypes) => {
   switch (action.type) {
     case InvoiceActions.SAVE_INVOICE_SUCCESS:
       return {
@@ -29,4 +29,4 @@ const productReducer = (state = initialState, action: InvoiceActionTypes) => {
   }
 };
 
-export default productReducer;
+export default invoiceReducer;
