@@ -192,6 +192,7 @@ export default function InvoiceForm({
           })}
 
           <button
+            type="button"
             onClick={() =>
               append({
                 product: products.allNames[0],

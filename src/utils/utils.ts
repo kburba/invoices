@@ -1,7 +1,27 @@
+import moment from 'moment';
+import { DateRangeType } from '../components/RangeDatePicker';
 import {
   NormalizedProducts,
   Product,
 } from '../containers/products/product.types';
+
+export function filterByDateRange(
+  items: any[],
+  dateKey: string,
+  { startDate, endDate }: DateRangeType
+) {
+  return items.filter((item) => {
+    const createdAtMoment = moment(item[dateKey]);
+    const startDateMatch = startDate
+      ? startDate.isSameOrBefore(createdAtMoment, 'day')
+      : true;
+    const endDateMatch = endDate
+      ? endDate.isSameOrAfter(createdAtMoment, 'day')
+      : true;
+
+    return startDateMatch && endDateMatch;
+  });
+}
 
 export function formatNormalizedProducts(
   products: Product[]
