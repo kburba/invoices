@@ -5,7 +5,12 @@ import {
 } from '../../containers/products/product.types';
 
 const initialState: ProductState = {
-  products: [],
+  products: {
+    allIds: [],
+    allNames: [],
+    byId: {},
+    byName: {},
+  },
   isLoadedProducts: false,
 };
 

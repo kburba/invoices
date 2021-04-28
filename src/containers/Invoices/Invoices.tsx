@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import Table from '../../components/Table/Table';
 import { TableValueTypes } from '../../components/Table/table.types';
 import { RootState } from '../../store/reducers';
-import { Invoice } from './invoice.types';
+import { NormalizedInvoices } from './invoice.types';
 
 export default function Invoices() {
-  const invoices = useSelector<RootState, Invoice[]>(
+  const invoices = useSelector<RootState, NormalizedInvoices>(
     ({ invoiceReducer }) => invoiceReducer.invoices
   );
 
@@ -18,7 +18,7 @@ export default function Invoices() {
         <Link to="/invoices/new">Create New Invoice</Link>
       </div>
       <Table
-        data={invoices}
+        data={Object.values(invoices.byId)}
         columns={[
           {
             title: 'Date',

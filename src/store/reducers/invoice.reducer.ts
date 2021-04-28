@@ -5,7 +5,10 @@ import {
 } from '../../containers/invoices/invoice.types';
 
 const initialState: InvoicesState = {
-  invoices: [],
+  invoices: {
+    allIds: [],
+    byId: {},
+  },
 };
 
 const productReducer = (state = initialState, action: InvoiceActionTypes) => {
@@ -13,7 +16,13 @@ const productReducer = (state = initialState, action: InvoiceActionTypes) => {
     case InvoiceActions.SAVE_INVOICE_SUCCESS:
       return {
         ...state,
-        invoices: [...state.invoices, action.payload],
+        invoices: {
+          byId: {
+            ...state.invoices.byId,
+            [action.payload.id]: { ...action.payload },
+          },
+          allIds: [...state.invoices.allIds, action.payload.id],
+        },
       };
     default:
       return state;

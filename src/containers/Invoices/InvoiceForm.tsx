@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/reducers';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { NewInvoice } from './invoice.types';
+import { NewInvoice, NormalizedInvoices } from './invoice.types';
 import { getProducts as getProductsAction } from '../../store/actions/product.actions';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Dropdown from '../../components/Dropdown';
-import { Product } from '../products/product.types';
+import { NormalizedProducts } from '../products/product.types';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import moment from 'moment';
@@ -26,6 +26,23 @@ export default function InvoiceForm({
     params: { invoiceId },
   },
 }: RouteComponentProps<MatchParams>) {
+  const { products, invoices } = useSelector<
+    RootState,
+    { products: NormalizedProducts; invoices: NormalizedInvoices }
+  >(({ productReducer, invoiceReducer }) => ({
+    products: productReducer.products,
+    invoices: invoiceReducer.invoices,
+  }));
+
+  const selectedInvoice = invoiceId ? invoices.byId[invoiceId] : null;
+
+  const defaultValues = selectedInvoice
+    ? { ...selectedInvoice }
+    : {
+        timestamp: new Date().getTime(),
+        lines: [],
+      };
+
   const {
     control,
     register,
@@ -34,10 +51,7 @@ export default function InvoiceForm({
     setValue,
     formState: { errors },
   } = useForm<NewInvoice>({
-    defaultValues: {
-      timestamp: new Date().getTime(),
-      lines: [],
-    },
+    defaultValues,
     resolver: yupResolver(schema),
     reValidateMode: 'onBlur',
     mode: 'all',
@@ -51,13 +65,13 @@ export default function InvoiceForm({
     dispatch(getProductsAction());
   }, [dispatch]);
 
-  const products = useSelector<RootState, Product[]>(
-    ({ productReducer }) => productReducer.products
-  );
-
   const { fields, remove, append } = useFieldArray({ control, name: 'lines' });
 
-  const productOptions = formatDropdownOptions(products, 'name', 'name');
+  const productOptions = formatDropdownOptions(
+    Object.values(products.byId),
+    'name',
+    'name'
+  );
 
   const totalSum = lines.reduce(
     (acc, curr) => acc + curr.price * curr.quantity,
@@ -69,6 +83,18 @@ export default function InvoiceForm({
     const saveCallbackFn = () => history.push('/invoices');
     dispatch(saveInvoice(data, saveCallbackFn));
   });
+
+  // on edit view return Not Found if invoice was not found in store
+  if (invoiceId && !selectedInvoice) {
+    return (
+      <div>
+        <div>Sorry, Invoice not found</div>
+        <button type="button" onClick={() => history.push('/invoices')}>
+          Go Back
+        </button>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -94,9 +120,7 @@ export default function InvoiceForm({
             const productName = watch(
               `lines.${idx}.product` as `lines.0.product`
             );
-            const selectedProduct = products.find(
-              (x) => x.name === productName
-            );
+            const selectedProduct = products.byName[productName];
             const isWeighted = selectedProduct && selectedProduct.isWeighted;
             return (
               <div className="line" key={field.id}>
@@ -106,9 +130,7 @@ export default function InvoiceForm({
                   name="product"
                   value={watch(`lines.${idx}.product` as `lines.0.product`)}
                   onChange={(e) => {
-                    const selected = products.find(
-                      (x) => x.name === productName
-                    );
+                    const selected = products.byName[productName];
                     setValue(
                       `lines.${idx}.product` as `lines.0.product`,
                       e.target.value
@@ -128,7 +150,6 @@ export default function InvoiceForm({
                 />
                 <input
                   placeholder="Enter quantity..."
-                  type="number"
                   {...register(`lines.${idx}.quantity` as `lines.0.quantity`)}
                   value={
                     isNaN(watch(`lines.${idx}.quantity` as `lines.0.quantity`))
@@ -169,17 +190,19 @@ export default function InvoiceForm({
               </div>
             );
           })}
-          {lines.length > 0 && <div>Total: {totalFormatted}</div>}
+
           <button
             onClick={() =>
               append({
-                product: products[0].name,
-                price: products[0].price,
+                product: products.allNames[0],
+                price: 0,
+                quantity: 1,
               })
             }
           >
             add product
           </button>
+          {lines.length > 0 && <div>Total: {totalFormatted}</div>}
           {errors.lines && !Array.isArray(errors.lines) && (
             <div>Please add at least one product</div>
           )}
@@ -200,7 +223,7 @@ export default function InvoiceForm({
 const schema = yup.object().shape({
   title: yup.string().required('Please fill'),
   description: yup.string().required('Please fill'),
-  timestamp: yup.string().required('Please choose date'),
+  timestamp: yup.number().required('Please choose date'),
   lines: yup
     .array()
     .min(1, 'Please add at least one product')

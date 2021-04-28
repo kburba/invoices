@@ -13,6 +13,7 @@ const Dropdown = React.forwardRef<HTMLSelectElement, Props>(
     return (
       <>
         <select value={value} ref={ref} name={name} onChange={onChange}>
+          <option disabled>Select...</option>
           {data.map((item, idx) => (
             <option key={item.key} value={item.value}>
               {item.text}

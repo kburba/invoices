@@ -1,5 +1,6 @@
 import { takeLatest, put, select } from 'redux-saga/effects';
 import { ProductActions } from '../../containers/products/product.types';
+import { formatNormalizedProducts } from '../../utils/utils';
 import {
   getProductsError,
   getProductsSuccess,
@@ -12,7 +13,8 @@ function* getProductsSaga() {
     console.log('saga');
     const isLoaded: boolean = yield select(getIsloadedProductsFromStore);
     if (!isLoaded) {
-      yield put(getProductsSuccess(PRODUCTS));
+      const normalizedProducts = formatNormalizedProducts(PRODUCTS);
+      yield put(getProductsSuccess(normalizedProducts));
     }
   } catch (e) {
     yield put(getProductsError(e));

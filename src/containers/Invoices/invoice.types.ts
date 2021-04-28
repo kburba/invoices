@@ -1,5 +1,5 @@
 export interface InvoicesState {
-  invoices: Invoice[];
+  invoices: NormalizedInvoices;
 }
 
 export enum InvoiceActions {
@@ -10,6 +10,10 @@ export enum InvoiceActions {
   GET_INVOICES_SUCCESS = 'GET_INVOICES_SUCCESS',
 }
 
+export type NormalizedInvoices = {
+  byId: { [id: string]: Invoice };
+  allIds: string[];
+};
 export type NewInvoice = Omit<Invoice, 'id'>;
 export interface Invoice {
   id: string;

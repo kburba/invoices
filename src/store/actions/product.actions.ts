@@ -2,7 +2,7 @@ import {
   GetProducts,
   GetProductsError,
   GetProductsSuccess,
-  Product,
+  NormalizedProducts,
   ProductActions,
 } from '../../containers/products/product.types';
 
@@ -12,7 +12,9 @@ export function getProducts(): GetProducts {
   };
 }
 
-export function getProductsSuccess(products: Product[]): GetProductsSuccess {
+export function getProductsSuccess(
+  products: NormalizedProducts
+): GetProductsSuccess {
   return {
     type: ProductActions.GET_PRODUCTS_SUCCESS,
     payload: products,

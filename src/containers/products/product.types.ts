@@ -1,5 +1,5 @@
 export interface ProductState {
-  products: Product[];
+  products: NormalizedProducts;
   isLoadedProducts: boolean;
 }
 
@@ -8,7 +8,16 @@ export enum ProductActions {
   GET_PRODUCTS_SUCCESS = 'GET_PRODUCTS_SUCCESS',
   GET_PRODUCTS_ERROR = 'GET_PRODUCTS_ERROR',
 }
-
+export type NormalizedProducts = {
+  byId: {
+    [id: string]: Product;
+  };
+  byName: {
+    [name: string]: Product;
+  };
+  allNames: string[];
+  allIds: string[];
+};
 export type Product = {
   id: number;
   name: string;
@@ -20,7 +29,7 @@ export interface GetProducts {
 }
 export interface GetProductsSuccess {
   type: typeof ProductActions.GET_PRODUCTS_SUCCESS;
-  payload: Product[];
+  payload: NormalizedProducts;
 }
 
 export interface GetProductsError {
