@@ -1,12 +1,21 @@
+import { DateRangeType } from '../../components/RangeDatePicker';
 import {
   ErrorType,
   ResetErrors,
+  SetDateRange,
   SetError,
   SetLoader,
   uiActionTypes,
   UILoaders,
   UnsetLoader,
 } from '../types/ui.types';
+
+export function setDateRange(dateRange: DateRangeType): SetDateRange {
+  return {
+    type: uiActionTypes.SET_DATERANGE,
+    payload: dateRange,
+  };
+}
 
 export function setError(error: ErrorType): SetError {
   return {

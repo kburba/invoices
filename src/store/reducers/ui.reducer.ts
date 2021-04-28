@@ -1,12 +1,23 @@
+import moment from 'moment';
 import { uiReducerState, UIActions, uiActionTypes } from '../types/ui.types';
 
 const initialState: uiReducerState = {
   isLoading: {},
   errors: {},
+  filterRange: {
+    startDate: moment().subtract(7, 'days'),
+    endDate: moment(),
+  },
 };
 
-const uiReducer = (state = initialState, action: UIActions) => {
+const uiReducer = (state = initialState, action: UIActions): uiReducerState => {
   switch (action.type) {
+    case uiActionTypes.SET_DATERANGE: {
+      return {
+        ...state,
+        filterRange: action.payload,
+      };
+    }
     case uiActionTypes.SET_ERROR: {
       return {
         ...state,

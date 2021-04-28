@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import moment from 'moment';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Table from '../../components/Table/Table';
 import { TableValueTypes } from '../../components/Table/table.types';
@@ -10,18 +9,19 @@ import RangeDatePicker, {
   DateRangeType,
 } from '../../components/RangeDatePicker';
 import { filterByDateRange, formatCurrency } from '../../utils/utils';
-
-const INITAL_DATES: DateRangeType = {
-  startDate: moment().subtract(7, 'days'),
-  endDate: moment(),
-};
+import { uiReducerState } from '../../store/types/ui.types';
+import { setDateRange } from '../../store/actions/ui.actions';
 
 export default function Invoices() {
-  const [dateRange, setDateRange] = useState<DateRangeType>(INITAL_DATES);
+  const dispatch = useDispatch();
 
-  const invoices = useSelector<RootState, NormalizedInvoices>(
-    ({ invoiceReducer }) => invoiceReducer.invoices
-  );
+  const { invoices, dateRange } = useSelector<
+    RootState,
+    { invoices: NormalizedInvoices; dateRange: uiReducerState['filterRange'] }
+  >(({ invoiceReducer, uiReducer }) => ({
+    invoices: invoiceReducer.invoices,
+    dateRange: uiReducer.filterRange,
+  }));
 
   const totalSum = invoices.allIds.reduce((sum, id): any => {
     const invoiceSum = invoices.byId[id].lines
@@ -36,13 +36,16 @@ export default function Invoices() {
     dateRange
   );
 
+  const handleDateChange = (dateRange: DateRangeType) =>
+    dispatch(setDateRange(dateRange));
+
   return (
     <div>
       <h1>Invoices</h1>
       <div>
         <Link to="/invoices/new">Create New Invoice</Link>
       </div>
-      <RangeDatePicker dateRange={dateRange} onChange={setDateRange} />
+      <RangeDatePicker dateRange={dateRange} onChange={handleDateChange} />
       <Table
         data={filteredInvoices}
         columns={[

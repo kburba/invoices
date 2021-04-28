@@ -16,6 +16,7 @@ import { saveInvoice } from '../../store/actions/invoice.actions';
 import DatePicker from '../../components/DatePicker';
 import { formatCurrency, formatDropdownOptions } from '../../utils/utils';
 import { uiReducerState } from '../../store/types/ui.types';
+import { resetErrors } from '../../store/actions/ui.actions';
 
 type MatchParams = {
   invoiceId?: string;
@@ -27,6 +28,8 @@ export default function InvoiceForm({
     params: { invoiceId },
   },
 }: RouteComponentProps<MatchParams>) {
+  const dispatch = useDispatch();
+
   const { products, invoices, serverErrors } = useSelector<
     RootState,
     {
@@ -40,6 +43,11 @@ export default function InvoiceForm({
     serverErrors: uiReducer.errors,
   }));
 
+  // reset errors on component load
+  useEffect(() => {
+    dispatch(resetErrors());
+  }, [dispatch]);
+
   const selectedInvoice = invoiceId ? invoices.byId[invoiceId] : null;
 
   const defaultValues = selectedInvoice
@@ -48,7 +56,7 @@ export default function InvoiceForm({
         timestamp: new Date().getTime(),
         lines: [],
       };
-
+  console.log('defaultValue', defaultValues.lines);
   const {
     control,
     register,
@@ -63,8 +71,6 @@ export default function InvoiceForm({
     mode: 'all',
   });
   const { timestamp, lines } = watch();
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     console.log('dispatch');
@@ -83,6 +89,7 @@ export default function InvoiceForm({
     (acc, curr) => acc + curr.price * curr.quantity,
     0
   );
+
   const totalFormatted = formatCurrency(totalSum);
 
   const onSubmit = handleSubmit((data) => {
@@ -123,29 +130,24 @@ export default function InvoiceForm({
         </div>
         <div className="lines">
           {fields.map((field, idx) => {
-            const productName = watch(
-              `lines.${idx}.product` as `lines.0.product`
-            );
+            const product = `lines.${idx}.product` as `lines.0.product`;
+            const productName = watch(product);
+            const price = `lines.${idx}.price` as `lines.0.price`;
+            const quantity = `lines.${idx}.quantity` as `lines.0.quantity`;
             const selectedProduct = products.byName[productName];
             const isWeighted = selectedProduct && selectedProduct.isWeighted;
             return (
               <div className="line" key={field.id}>
                 <Dropdown
                   data={productOptions}
-                  {...register(`lines.${idx}.product` as `lines.0.product`)}
+                  {...register(product)}
                   name="product"
-                  value={watch(`lines.${idx}.product` as `lines.0.product`)}
-                  onChange={(e) => {
-                    const selected = products.byName[productName];
-                    setValue(
-                      `lines.${idx}.product` as `lines.0.product`,
-                      e.target.value
-                    );
+                  value={watch(product)}
+                  onChange={(value) => {
+                    const selected = products.byName[value];
+                    setValue(product, value);
                     if (selected) {
-                      setValue(
-                        `lines.${idx}.price` as `lines.0.price`,
-                        selected.price
-                      );
+                      setValue(price, selected.price);
                     }
                   }}
                   error={
@@ -155,42 +157,31 @@ export default function InvoiceForm({
                   }
                 />
                 <input
-                  placeholder="Enter quantity..."
-                  {...register(`lines.${idx}.quantity` as `lines.0.quantity`)}
-                  value={
-                    isNaN(watch(`lines.${idx}.quantity` as `lines.0.quantity`))
-                      ? ''
-                      : watch(`lines.${idx}.quantity` as `lines.0.quantity`)
-                  }
+                  placeholder={`Enter quantity${
+                    isWeighted ? ' (0,0000)' : ''
+                  }...`}
+                  type="number"
+                  lang="en"
+                  {...register(quantity)}
+                  value={isNaN(watch(quantity)) ? '' : watch(quantity)}
                   onBlur={(e) => {
                     const val = e.target.value;
                     const newValue = parseFloat(
                       parseFloat(val).toFixed(isWeighted ? 4 : 0)
                     );
                     if (!isNaN(newValue)) {
-                      setValue(
-                        `lines.${idx}.quantity` as `lines.0.quantity`,
-                        newValue
-                      );
+                      setValue(quantity, newValue);
                     }
                   }}
                 />
                 <input
                   disabled
-                  value={
-                    isNaN(watch(`lines.${idx}.price` as `lines.0.price`))
-                      ? ''
-                      : watch(`lines.${idx}.price` as `lines.0.price`)
-                  }
+                  type="number"
+                  value={isNaN(watch(price)) ? '' : watch(price)}
                 />
                 <input
                   disabled
-                  value={
-                    (
-                      watch(`lines.${idx}.price` as `lines.0.price`) *
-                      watch(`lines.${idx}.quantity` as `lines.0.quantity`)
-                    ).toFixed(2) || 0
-                  }
+                  value={(watch(price) * watch(quantity)).toFixed(2) || 0}
                 />
                 <button onClick={() => remove(idx)}>X</button>
               </div>
@@ -201,9 +192,7 @@ export default function InvoiceForm({
             type="button"
             onClick={() =>
               append({
-                product: products.allNames[0],
-                price: 0,
-                quantity: 1,
+                product: '',
               })
             }
           >

@@ -5,10 +5,11 @@ import {
 } from '../../containers/invoices/invoice.types';
 import { saveInvoiceSuccess } from '../actions/invoice.actions';
 import { v4 as uuidv4 } from 'uuid';
-import { setError } from '../actions/ui.actions';
+import { resetErrors, setError } from '../actions/ui.actions';
 
 function* saveInvoiceSaga({ payload: { invoice, callbackFn } }: SaveInvoice) {
   try {
+    yield put(resetErrors());
     const savedInvoice = {
       ...invoice,
       id: uuidv4(),
