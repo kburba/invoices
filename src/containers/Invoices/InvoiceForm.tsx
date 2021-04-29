@@ -131,6 +131,7 @@ export default function InvoiceFormik({
                       placeholder="Enter title..."
                       name="title"
                       onChange={handleChange}
+                      value={values.title}
                     />
                     {errors.title && (
                       <div className="errorMsg">{errors.title}</div>
@@ -157,6 +158,7 @@ export default function InvoiceFormik({
                     onChange={handleChange}
                     rows={6}
                     name="description"
+                    value={values.description}
                     placeholder="Describe invoice..."
                   />
                 </div>
