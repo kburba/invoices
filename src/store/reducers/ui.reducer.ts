@@ -5,7 +5,7 @@ const initialState: uiReducerState = {
   isLoading: {},
   errors: {},
   filterRange: {
-    startDate: moment().subtract(7, 'days'),
+    startDate: moment().startOf('month'),
     endDate: moment(),
   },
 };

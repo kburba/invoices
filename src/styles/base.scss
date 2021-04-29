@@ -76,6 +76,10 @@ input.error::-webkit-input-placeholder {
 .inline {
   display: flex;
 
+  &.text-right {
+    justify-content: flex-end;
+  }
+
   &.inline--column {
     flex-direction: column;
     &.inputGroup > .inputGroup {
@@ -113,79 +117,16 @@ input.error::-webkit-input-placeholder {
   }
 }
 
-.lines {
-  padding: 8px;
-  border: 1px solid lightgrey;
-  border-radius: 8px;
-
-  .line {
-    display: flex;
-    margin-bottom: 8px;
-    border-bottom: 1px solid lightgrey;
-
-    button {
-      border: 0;
-      padding: 6px;
-      background: 0;
-      margin: 0;
-      color: lightgray;
-      cursor: pointer;
-      &:hover {
-        color: grey;
-      }
-    }
-
-    &:last-of-type {
-      border-bottom: 0;
-    }
-
-    input,
-    select {
-      font-size: 14px;
-      border: 0;
-      background: 0;
-      padding: 3px 5px;
-      border-bottom: 1px solid transparent;
-      border-radius: 0;
-      &:focus {
-        box-shadow: none;
-        outline: none;
-        border-bottom-color: rgb(125, 223, 255);
-      }
-    }
-
-    & > div {
-      width: 50%;
-      margin-right: 15px;
-      overflow: hidden;
-      &:first-of-type {
-        width: 100%;
-      }
-    }
-    &:nth-child(2) {
-      & > div {
-        &:last-child {
-          margin-right: 36px;
-        }
-      }
-    }
-    &.names {
-      font-size: 14px;
-      color: grey;
-      margin-bottom: 8px;
-      padding-bottom: 3px;
-      border-bottom: 2px solid lightgrey;
-      & > div {
-        &:last-child {
-          margin-right: 39px;
-        }
-      }
-    }
-  }
-}
-
 .text-right {
   text-align: right;
+}
+.text-center {
+  text-align: center;
+}
+
+.text-small {
+  font-size: 12px;
+  color: grey;
 }
 
 .SingleDatePicker {
@@ -204,16 +145,25 @@ input.error::-webkit-input-placeholder {
   }
 }
 
+.DateRangePicker {
+  border: 0;
+  .DateRangePickerInput {
+    border: 0;
+    border-radius: 8px;
+  }
+}
+
 button {
   border-radius: 8px;
-  padding: 8px 15px;
-  border: 1px solid lightgrey;
+  padding: 12px 15px;
+  border: 0;
+  font-size: 14px;
   cursor: pointer;
   margin-right: 5px;
 
   &.primary {
     background-color: #c5f1ff;
-    padding: 8px 25px;
+    padding: 12px 25px;
     color: grey;
   }
   &.basic {
@@ -221,6 +171,23 @@ button {
     color: grey;
     &:hover {
       color: rgba(0, 0, 0, 0.9);
+    }
+  }
+}
+
+a {
+  text-decoration: none;
+  color: rgb(0, 164, 219);
+  border-bottom: 1px solid transparent;
+
+  &:hover {
+    border-bottom-color: rgb(0, 164, 219);
+  }
+
+  &.buttonLink {
+    border-bottom: 0;
+    &:hover {
+      border-bottom: 0;
     }
   }
 }

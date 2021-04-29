@@ -1,7 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+// import InvoiceForm from './containers/invoices/InvoiceForm';
 import InvoiceForm from './containers/invoices/InvoiceForm';
 import Invoices from './containers/invoices/Invoices';
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
 
 function App() {
   return (
