@@ -63,7 +63,7 @@ export default function Invoices() {
         )}
         <div>
           <Link className="buttonLink" to="/invoices/new">
-            <button type="button" className="basic">
+            <button type="button" className="basic kbbutton">
               Create New Invoice
             </button>
           </Link>

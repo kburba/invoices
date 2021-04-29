@@ -246,7 +246,7 @@ export default function InvoiceFormik({
                       })}
                       <button
                         type="button"
-                        className="basic"
+                        className="basic kbbutton"
                         onClick={() =>
                           arrayHelpers.push({
                             product: '',
@@ -267,13 +267,13 @@ export default function InvoiceFormik({
               )}
               <div className="text-right">
                 <button
-                  className="basic"
+                  className="basic kbbutton"
                   type="button"
                   onClick={() => history.push('/invoices')}
                 >
                   Cancel
                 </button>
-                <button className="primary" type="submit">
+                <button className="primary kbbutton" type="submit">
                   Save
                 </button>
               </div>

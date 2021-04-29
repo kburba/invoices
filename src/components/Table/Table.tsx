@@ -11,7 +11,7 @@ type TableProps = {
 
 export default function Table({ actions, columns, data }: TableProps) {
   return (
-    <table>
+    <table className="kbtable">
       <thead>
         <tr>
           {columns.map((column, idx) => (
